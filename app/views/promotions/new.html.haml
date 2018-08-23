@@ -1,0 +1,117 @@
+#module-new-promotion
+  .panel.panel-default
+    .panel-body
+      = render 'form', promotion: @promotion, products: @products
+:javascript
+  $( document ).ready(function() {
+     $('#promotion_valid_date').datepicker({
+      format: "dd/mm/yyyy",
+      startDate: '+1d'
+    });
+
+    $('#promotion_end_date').datepicker({
+      format: "dd/mm/yyyy",
+      startDate: '+1d'
+    });
+
+    $('#promotion_product').chosen({
+      no_results_text: 'No results matched',
+      width: '100%',
+      disable_search: false
+    });
+
+    $("#promotion_colection").chosen()
+    $("#promotion_promotion_type").chosen({
+      width: '200px'
+    })
+  });
+
+  $("#promotion_promotion_type").on('change', function() {
+    if (this.value == "volume_amount"){
+      $(".volume-option").removeClass("hidden")
+      $(".spend-amount-option").addClass("hidden")
+    }
+    else {
+      $(".volume-option").addClass("hidden")
+      $(".spend-amount-option").removeClass("hidden")
+    }
+  });
+
+  $("#add_more_volume").on("click", function() {
+    currentdate = new Date();
+    new_line = '<tr class="promotion_line"> \
+                <td> \
+                <input class="text_input new_input_text" type="number" name="promotion_promotion_details_attributes_' + currentdate.getTime() +'_qty"> \
+                </td> \
+                <td> \
+                <input class="text_input new_input_text" type="number" name="promotion_promotion_details_attributes_' + currentdate.getTime() + '_value">\
+                </td> \
+                <td>\
+                <a class="btn btn-default remove_tier">Remove</a>\
+                </td>\
+                </tr>';
+    submit_field = '<input class="text_input" type="hidden" name="promotion[promotion_details_attributes][' + currentdate.getTime() +'][qty]" id="promotion_promotion_details_attributes_' + currentdate.getTime() + '_qty">\
+                    <input class="text_input" type="hidden" name="promotion[promotion_details_attributes][' + currentdate.getTime() +'][value]" id="promotion_promotion_details_attributes_' + currentdate.getTime() + '_value">'
+    $(".promotion-volume-table").append(new_line);
+    $(".promotion-volume-table").append(submit_field);
+    $(".new_input_text").each(function() {
+      $(this).on("change", function(){
+        id = "#" + $(this).attr("name");
+        value = $(this).val();
+        $(id).attr("value", value);
+      });
+    });
+
+    $(".volume-option").find(".remove_tier").each(function() {
+      $(this).on("click", function(){
+        $(this).closest(".promotion_line").next("input[type='hidden']").remove();
+        $(this).closest(".promotion_line").remove();
+      });
+    });
+  });
+
+  $("#add_more_spend_amount").on("click", function() {
+    currentdate = new Date();
+    new_line = '<tr class="promotion_line"> \
+                <td> \
+                <input class="text_input new_input_text" type="number" name="promotion_promotion_details_attributes_' + currentdate.getTime() +'_qty"> \
+                </td> \
+                <td> \
+                <input class="text_input new_input_text" type="number" name="promotion_promotion_details_attributes_' + currentdate.getTime() + '_value">\
+                </td> \
+                <td>\
+                <a class="btn btn-default remove_tier">Remove</a>\
+                </td>\
+                </tr>';
+    submit_field = '<input class="text_input" type="hidden" name="promotion[promotion_details_attributes][' + currentdate.getTime() +'][qty]" id="promotion_promotion_details_attributes_' + currentdate.getTime() + '_qty">\
+                    <input class="text_input" type="hidden" name="promotion[promotion_details_attributes][' + currentdate.getTime() +'][value]" id="promotion_promotion_details_attributes_' + currentdate.getTime() + '_value">'
+    $(".promotion-spend-table").append(new_line);
+    $(".promotion-spend-table").append(submit_field);
+    $(".new_input_text").each(function() {
+      $(this).on("change", function(){
+        id = "#" + $(this).attr("name");
+        value = $(this).val();
+        $(id).attr("value", value);
+      });
+    });
+
+    $(".spend-amount-option").find(".remove_tier").each(function() {
+      $(this).on("click", function(){
+        $(this).closest(".promotion_line").next("input[type='hidden']").remove();
+        $(this).closest(".promotion_line").remove();
+      });
+    });
+  });
+
+  $(".spend-amount-option .volume-option").find(".remove_tier").each(function() {
+    $(this).on("click", function(){
+      $(this).closest(".promotion_line").next("input[type='hidden']").remove();
+      $(this).closest(".promotion_line").remove();
+    });
+  });
+
+  $("#remove_products").on("click", function() {
+    $('#promotion_product option:selected').removeAttr('selected');
+    $('#promotion_product').trigger('chosen:updated');
+  });
+

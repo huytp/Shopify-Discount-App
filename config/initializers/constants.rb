@@ -1,0 +1,1 @@
+PROMOTION_TYPE = [["Volume Amount", "volume_amount"], ["Spend Amount", "spend_amount"]]
